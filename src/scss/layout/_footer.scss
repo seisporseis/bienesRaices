@@ -1,10 +1,16 @@
 .footer {
-    padding: $separacion / 2;
-
+    padding: $separacion / 2 0;
+    margin-bottom: 0;
     background-color: $grisOscuro;
 
     .contenedor-footer {
         padding-top: $separacion / 2;
+    }
+
+    .navegacion {
+        visibility: visible;
+        opacity: 1;
+        height: auto;
     }
 
     .copyright {
