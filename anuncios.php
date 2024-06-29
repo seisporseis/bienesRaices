@@ -1,4 +1,8 @@
-<?php include 'includes/templates/header.php';?>
+<?php 
+
+    require 'includes/funciones.php';
+    incluirTemplate('header');
+?>
 
     <main class="contenedor seccion">
         <h2>Casas y departamentos en venta</h2>
@@ -192,19 +196,9 @@
             </div>
         </div>
     </main>
-   
-    <footer class="footer seccion">
-        <div class="contenedor contenedor-footer">
-            <nav class="navegacion">
-                <a href="nosotros.php">Nosotros</a>
-                <a href="anuncios.php">Anuncios</a>gu
-                <a href="blog.php">Blog</a>
-                <a href="contacto.php">Contacto</a>
-            </nav>
-        </div>
-        <p class="copyright">Todos los derechos reservados 2024 &copy;</p>
-    </footer>
+     
+<?php 
+    incluirTemplate('footer');
+?>
     
-    <script src="/build/js/bundle.min.js"></script>
-</body>
-</html>
+   
