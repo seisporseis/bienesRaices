@@ -104,7 +104,7 @@
 
             if($resultado) {
                 //redireccionar usuario: para no meter datos duplicados
-                header("Location: /admin");
+                header("Location: /admin?resultado=1");
 
                 // echo "Correctamente insertado";
             }
