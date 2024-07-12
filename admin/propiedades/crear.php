@@ -21,9 +21,9 @@
     //ejecuta codigo despues de envio de formulario
     if($_SERVER['REQUEST_METHOD'] === 'POST' ) {
 
-        echo '<pre>';
-        var_dump($_POST);
-        echo '</pre>';
+        // echo '<pre>';
+        // var_dump($_POST);
+        // echo '</pre>';
 
         echo '<pre>';
         var_dump($_FILES);
@@ -73,7 +73,7 @@
         }
 
         //validar tamaño de imagen (100kb max)
-        $medida = 1000 * 100;
+        $medida = 1000 * 1000;
 
         if($imagen['size'] > $medida) {
             $errores[]  = "Debes cargar una imagen";
@@ -125,8 +125,8 @@
             <div class="alerta error">
                  <?php echo $error; ?>
             </div>
-           
         <?php endforeach; ?>
+
         <form action="/admin/propiedades/crear.php" method="POST" class="formulario" enctype="multipart/form-data">
             <fieldset>
                 <legend>Info general</legend>
@@ -139,6 +139,7 @@
 
                 <label for="imagen">Foto:</label>
                 <input type="file" id="imagen" name="imagen" accept="image/jpeg, image/png">
+                
                 <label for="descripcion">Descripción:</label>
                 <textarea id="descripcion"  name="descripcion" placeholder="Describe la propiedad"><?php echo $descripcion; ?></textarea>
 
