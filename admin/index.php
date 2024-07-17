@@ -1,5 +1,10 @@
 <?php
-
+    require '../includes/funciones.php';
+    $auth = estaAutenticado();
+ 
+    if(!$auth) {
+        header('Location: /');
+    }
    
     //importar base de datos
     require '../includes/config/database.php';
@@ -41,7 +46,6 @@
     }
 
     //incluye un template
-    require '../includes/funciones.php';
     incluirTemplate('header');
 ?>
 

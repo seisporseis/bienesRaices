@@ -1,3 +1,7 @@
+<?php
+var_dump($_SESSION);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,6 +33,10 @@
                 </div>
                 
             </div> <!--.barra-->
+            <?php 
+               
+                    echo $inicio ? "<h1>Ventas y departamentos de lujo</h1>" : '';
+            ?>
         </div>
     </header>
 </body>
