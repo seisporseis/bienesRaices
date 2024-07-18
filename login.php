@@ -1,14 +1,14 @@
 <?php
-    require 'includes/config/database.php';
+    require 'includes/app.php';
     $db = conectarDB();
 
 $errores = [];
 
     //autenticar usuario
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
-        echo '<pre>';
-        var_dump($_POST);
-        echo '</pre>';
+        // echo '<pre>';
+        // var_dump($_POST);
+        // echo '</pre>';
 
         $email = mysqli_real_escape_string($db, filter_var($_POST['email'], FILTER_VALIDATE_EMAIL));
         $password = mysqli_real_escape_string($db, $_POST['password']);
@@ -25,7 +25,7 @@ $errores = [];
             //revisar si el usuario existe
             $query = "SELECT * FROM usuarios WHERE  email = '{$email}' ";
             $resultado = mysqli_query($db, $query);
-            var_dump($resultado);
+            // var_dump($resultado);
 
             if($resultado->num_rows) {
                 //revisar si el password es correcto
@@ -54,7 +54,6 @@ $errores = [];
         }
     }
 
-    require 'includes/funciones.php';
     incluirTemplate('header');
 
 ?>

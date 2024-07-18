@@ -1,6 +1,6 @@
 <?php
 //importar conexion
-require 'includes/config/database.php';
+require 'includes/app.php';
 $db = conectarDB();
 
 //crear email y password
@@ -14,6 +14,5 @@ $query = " INSERT INTO usuarios (email, password) VALUES ('{$email}', '{$passwor
 
 // echo $query;
 
-mysqli_query($db, $query);
-
 //agregar a base de datos
+mysqli_query($db, $query);

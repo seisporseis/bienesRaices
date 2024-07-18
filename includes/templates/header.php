@@ -1,5 +1,14 @@
 <?php
-var_dump($_SESSION);
+
+if(!isset($_SESSION)) {
+    session_start();
+}
+// var_dump($_SESSION);
+
+$auth = $_SESSION['login'] ?? false;
+
+// var_dump($auth);
+
 ?>
 
 <!DOCTYPE html>
@@ -29,6 +38,9 @@ var_dump($_SESSION);
                         <a href="anuncios.php">Anuncios</a>
                         <a href="blog.php">Blog</a>
                         <a href="contacto.php">Contacto</a>
+                        <?php if($auth):  ?>
+                            <a href="cerrar-sesion.php">Cerrar sesión</a>
+                        <?php endif;?>
                     </nav>
                 </div>
                 

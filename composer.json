@@ -1,0 +1,16 @@
+{
+    "name": "bizaccount/bienes-raices",
+    "description": "Agregando POO",
+    "autoload": {
+        "psr-4": {
+            "App\\" : "./classes"
+        }
+    },
+    "authors": [
+        {
+            "name": "sandaliademercado",
+            "email": "38840503+seisporseis@users.noreply.github.com"
+        }
+    ],
+    "require": {}
+}
