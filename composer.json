@@ -12,5 +12,7 @@
             "email": "38840503+seisporseis@users.noreply.github.com"
         }
     ],
-    "require": {}
+    "require": {
+        "intervention/image": "^3.7"
+    }
 }

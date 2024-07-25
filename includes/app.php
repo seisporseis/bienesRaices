@@ -7,9 +7,10 @@ require 'config/database.php';
 require __DIR__ . '/../vendor/autoload.php';
 
 //conectarnos a db
-$db = conectar DB();
+$db = conectarDB();
+
 
 use App\Propiedad;
 
-Propiedad::setDB();
+Propiedad::setDB($db);
 

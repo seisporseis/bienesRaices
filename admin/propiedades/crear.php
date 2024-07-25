@@ -1,11 +1,10 @@
 <?php
-
     require '../../includes/app.php';
-
     use App\Propiedad;
 
-
     estaAutenticado();
+
+    use Intervention\Image\ImageManagerStatic as Image;
 
     //DB
     $db = conectarDB();
@@ -15,7 +14,7 @@
     $resultado = mysqli_query($db, $consulta);
 
     //validacion de campos
-    $errores = [];
+    $errores = Propiedad::getErrores();
 
     $titulo = '';
     $precio = '';
@@ -29,90 +28,36 @@
     if($_SERVER['REQUEST_METHOD'] === 'POST' ) {
 
         $propiedad = new Propiedad($_POST);
+        
+        //**carga de archivos al servidor**//
 
-        $propiedad->guardar();
+        //generar nombre unico
+        $nombreImagen = md5( uniqid( rand(), true ) ) . ".jpg";
 
-        debuguear($propiedad);
-
-        // echo '<pre>';
-        // var_dump($_POST);
-        // echo '</pre>';
-
-        echo '<pre>';
-        var_dump($_FILES);
-        echo '</pre>';
-
-        $titulo = mysqli_real_escape_string( $db, $_POST['titulo'] );
-        $precio = mysqli_real_escape_string( $db, $_POST['precio'] );
-        $descripcion = mysqli_real_escape_string( $db, $_POST['descripcion'] );
-        $habitaciones = mysqli_real_escape_string( $db, $_POST['habitaciones'] );
-        $wc = mysqli_real_escape_string( $db, $_POST['wc'] );
-        $estacionamiento = mysqli_real_escape_string( $db, $_POST['estacionamiento'] );
-        $vendedorId = mysqli_real_escape_string( $db, $_POST['vendedor'] );
-        $creado = date('Y/m/d');
-
-        $imagen = $_FILES['imagen'];
-    
-        if(!$titulo) {
-            $errores[]  = "Debes rellenar este campo";
+        //setear imagen
+        //realiza resize a imagen con intervention
+        if($_FILES['imagen']['tmp_name']) {
+            $image = Image::make($_FILES['imagen']['tmp_name'])->fit(800,600);
+            $propiedad->setImagen($nombreImagen);
         }
 
-        if(!$precio) {
-            $errores[]  = "Debes rellenar este campo";
-        }
-
-        if(strlen($descripcion) < 50) {
-            $errores[]  = "La descripción debe tener mínimo 50 caracteres";
-        }
-
-        if(!$habitaciones) {
-            $errores[]  = "Debes rellenar este campo";
-        }
-
-        if(!$wc) {
-            $errores[]  = "Debes rellenar este campo";
-        }
-
-        if(!$estacionamiento) {
-            $errores[]  = "Debes rellenar este campo";
-        }
-
-        if(!$vendedorId) {
-            $errores[]  = "Debes rellenar este campo";
-        }
-
-        if(!$imagen['name']) {
-            $errores[]  = "Debes cargar una imagen";
-        }
-
-        //validar tamaño de imagen (100kb max)
-        $medida = 1000 * 1000;
-
-        if($imagen['size'] > $medida) {
-            $errores[]  = "Debes cargar una imagen";
-        }
+        //validar
+        $errores = $propiedad->validar();
 
         //revisar que array de errores esté vacio
         if(empty($errores)) {
-            //*carga de archivos al servidor*//
-
-            //crear carpeta para imagenes
-            $carpetaImagenes = '../../imagenes/';
-
-            if(!is_dir($carpetaImagenes)) {
-                mkdir($carpetaImagenes);
+            //Crear la carpeta para subir imagenes
+            if(!is_dir(CARPETA_IMAGENES)) {
+                mkdir(CARPETAS_IMAGENES);
             }
 
-            //generar nombre unico
-            $nombreImagen = md5( uniqid( rand(), true ) ) . ".jpg";
+            //guarda imagen en servidor
+            $image->save(CARPETAS_IMAGENES . $nombreImagen);
 
-            //subir imagen
-            move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImagen );
+            //guarda en la base de datos
+            $resultado = $propiedad->guardar();
 
-
-           
-            $resultado = mysqli_query($db, $query);
-
+            //mensaje de exito o error
             if($resultado) {
                 //redireccionar usuario: para no meter datos duplicados
                 header("Location: /admin?resultado=1");
