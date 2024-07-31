@@ -1,20 +1,17 @@
 <?php
-    require '../includes/funciones.php';
-    $auth = estaAutenticado();
- 
-    if(!$auth) {
-        header('Location: /');
-    }
-   
-    //importar base de datos
-    require '../includes/config/database.php';
-    $db = conectarDB();
+    require '../includes/app.php';
+    estaAutenticado();
+
+    use App\Propiedad;
 
     //escribir el query
     $query = "SELECT * FROM propiedades";
 
     //consultar DB
     $resultadoConsulta = mysqli_query($db, $query);
+
+    //implementar método para obtener todas las propiedades
+    $propiedades = Propiedad::all();
 
     //muestra mensaje condicional
     $resultado = $_GET['resultado'] ?? null;

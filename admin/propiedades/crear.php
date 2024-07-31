@@ -1,10 +1,12 @@
 <?php
     require '../../includes/app.php';
+
     use App\Propiedad;
 
     estaAutenticado();
 
     use Intervention\Image\ImageManagerStatic as Image;
+
 
     //DB
     $db = conectarDB();
@@ -27,6 +29,7 @@
     //ejecuta codigo despues de envio de formulario
     if($_SERVER['REQUEST_METHOD'] === 'POST' ) {
 
+        /**Crear nueva instancia**/
         $propiedad = new Propiedad($_POST);
         
         //**carga de archivos al servidor**//
@@ -46,13 +49,14 @@
 
         //revisar que array de errores esté vacio
         if(empty($errores)) {
+
             //Crear la carpeta para subir imagenes
             if(!is_dir(CARPETA_IMAGENES)) {
-                mkdir(CARPETAS_IMAGENES);
+                mkdir(CARPETA_IMAGENES);
             }
 
             //guarda imagen en servidor
-            $image->save(CARPETAS_IMAGENES . $nombreImagen);
+            $image->save(CARPETA_IMAGENES . $nombreImagen);
 
             //guarda en la base de datos
             $resultado = $propiedad->guardar();
@@ -62,7 +66,6 @@
                 //redireccionar usuario: para no meter datos duplicados
                 header("Location: /admin?resultado=1");
 
-                // echo "Correctamente insertado";
             }
         }
         

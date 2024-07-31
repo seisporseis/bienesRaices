@@ -46,7 +46,6 @@ class Propiedad {
         //sanitizar los datos
         $atributos = $this->sanitizarAtributos();
 
-
         //Insertar en la base de datos:
         $query = " INSERT INTO propiedades (";
         $query .= join(', ', array_keys($atributos));
@@ -81,6 +80,7 @@ class Propiedad {
 
     //Carga de archivos
     public function setImagen($imagen) {
+        //asignar al atributo de imagen el nombre de la imagen
         if($imagen) {
             $this->imagen = $imagen;
         }
@@ -128,5 +128,12 @@ class Propiedad {
 
     }
 
+    //Lista todas las propiedades
+    public static function all() {
+        $query = "SELECT * FROM propiedades";
 
+        $resultado = self::$db->query($query);
+
+        debuguear($resultado->fetch_assoc());
+    }
 }
