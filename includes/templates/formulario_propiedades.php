@@ -30,15 +30,17 @@
     <input type="number" id="estacionamiento" name="propiedad[estacionamiento]" value="<?php echo sane($propiedad->estacionamiento); ?>" placeholder="Ejemplo: 2" min="1" max="9">
 </fieldset>
 <fieldset>
-    <legend>Vendedor de la propiedad</legend>
-
-    <!-- <select name="vendedorId" id="vendedor">
-        <option value="" >--Seleccione--</option>
-        <?php while ($vendedor = mysqli_fetch_assoc($resultado) ): ?>
+    <legend>Selecciona vendedor de la propiedad</legend>
+    
+    <label for="vendedor">Vendedor</label>
+    <select name="propiedad[vendedorId]" id="vendedor">
+        <option selected value="" >--Seleccione--</option>
+        <?php foreach ($vendedores as $vendedor) { ?>
             <option 
-            <?php echo $vendedorId === sane($propiedad->vendedor['id']) ? 'selected' : ''; ?> 
-            value="<?php echo $vendedor['id']; ?>"> <?php echo $vendedor['nombre'] . " " . $vendedor['apellido']; ?>
+            <?php echo $propiedad->vendedorId === $vendedor->id ? 'selected' : ''; ?>
+            value="<?php echo sane($vendedor->id); ?>"
+            ><?php echo sane($vendedor->nombre) . " " . sane($vendedor->apellido); ?>
             </option>
-        <?php endwhile; ?>
-    </select> -->
+       <?php } ?>   
+    </select>
 </fieldset>

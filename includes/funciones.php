@@ -29,3 +29,9 @@ function sane($html) : string {
     $sane = htmlspecialchars($html, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     return $sane;
 }
+
+function validarTipoContenido($tipo) {
+    $tipos = ['vendedor', 'propiedad'];
+
+    return in_array($tipo, $tipos);
+}

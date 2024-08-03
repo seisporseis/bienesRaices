@@ -1,6 +1,7 @@
 <?php
     require '../../includes/app.php';
     use App\Propiedad;
+    use App\Vendedor;
     use Intervention\Image\ImageManagerStatic as Image;
 
     estaAutenticado();
@@ -15,9 +16,7 @@
     // Obtener los datos de la propiedad
     $propiedad = Propiedad::find($id);
 
-    //consulta sql para obtener vendedores
-    $consulta = "SELECT * FROM vendedores";
-    $resultado = mysqli_query($db, $consulta);
+    $vendedores = Vendedor::all();
 
     //validacion de campos
     $errores = Propiedad::getErrores();
