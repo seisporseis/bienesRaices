@@ -10,7 +10,6 @@ class Propiedad {
     //Errores
     protected static $errores = [];
 
-
     public $id;
     public $titulo;
     public $precio;
@@ -23,7 +22,7 @@ class Propiedad {
     public $vendedorId;
 
     public function __construct($args = []) {
-        $this->id = $args['id'] ?? '';
+        $this->id = $args['id'] ?? null;
         $this->titulo = $args['titulo'] ?? '';
         $this->precio = $args['precio'] ?? '';
         $this->imagen = $args['imagen'] ?? '';
@@ -32,8 +31,7 @@ class Propiedad {
         $this->wc = $args['wc'] ?? '';
         $this->estacionamiento = $args['estacionamiento'] ?? '';
         $this->creado = date('Y/m/d');
-        $this->vendedorId = $args['vendedorId'] ?? '';
-
+        $this->vendedorId = $args['vendedorId'] ?? 1;
     }
 
     //definir conexion a base de datos
@@ -42,7 +40,16 @@ class Propiedad {
     }
 
     public function guardar() {
+        if(!is_null($this->id)) {
+            //actualizar
+            $this->actualizar();
+        } else {
+            //si no hay registro, crea uno nuevo.
+            $this->crear();
+        }
+    }
 
+    public function crear() {
         //sanitizar los datos
         $atributos = $this->sanitizarAtributos();
 
@@ -56,7 +63,45 @@ class Propiedad {
 
         $resultado = self::$db->query($query);
 
-       return $resultado;
+       //mensaje de exito o error
+       if($resultado) {
+        //redireccionar usuario: para no meter datos duplicados
+        header("Location: /admin?resultado=1");
+        }
+    }
+
+    public function actualizar() {
+        //sanitizar los datos
+        $atributos = $this->sanitizarAtributos();
+
+        $valores = [];
+        foreach($atributos as $key => $value) {
+            $valores[] = "{$key} = '{$value}'";
+        }
+
+        //insertar en base de datos
+        $query = "UPDATE propiedades SET ";
+        $query .= join(', ', $valores);  
+        $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' ";
+        $query .= " LIMIT 1 ";
+
+        $resultado = self::$db->query($query);
+
+        if($resultado) {
+            //redireccionar usuario: para no meter datos duplicados
+            header("Location: /admin?resultado=2");
+        }
+    }
+
+    public function eliminar() {
+        $query = "DELETE FROM propiedades WHERE id = " . self::$db->escape_string($this->id) . " LIMIT 1 ";
+
+        $resultado = self::$db->query($query);
+
+        if($resultado) {
+            $this->borrarImagen();
+            header("Location: /admin?resultado=3");
+        }
     }
 
     public function atributos() {
@@ -80,9 +125,22 @@ class Propiedad {
 
     //Carga de archivos
     public function setImagen($imagen) {
+        //Elimina imagen previa
+        if(!is_null($this->id)) {
+           $this->borrarImagen();
+        }
+
         //asignar al atributo de imagen el nombre de la imagen
         if($imagen) {
             $this->imagen = $imagen;
+        }
+    }
+
+    public function borrarImagen() {
+        //Comprueba si existe un archivo y lo elimina
+        $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen);
+        if($existeArchivo) {
+            unlink(CARPETA_IMAGENES . $this->imagen);
         }
     }
 
@@ -125,15 +183,62 @@ class Propiedad {
         }
 
         return self::$errores;
-
     }
 
-    //Lista todas las propiedades
+    //Lista todas las registros
     public static function all() {
         $query = "SELECT * FROM propiedades";
 
+        $resultado = self::consultarSQL($query);
+
+        return $resultado;
+    }
+
+    //Buscar un registro por su ID
+    public static function find($id)  {
+        $query = "SELECT * FROM propiedades WHERE id = {$id}";
+
+        $resultado = self::consultarSQL($query);
+
+        return array_shift($resultado);
+    }
+
+    public static function consultarSQL($query) {
+        //Consultar DB
         $resultado = self::$db->query($query);
 
-        debuguear($resultado->fetch_assoc());
+        //Iterar resultados
+        $array = [];
+        while($registro = $resultado->fetch_assoc()) {
+            $array[] = self::crearObjeto($registro);
+        }
+
+        //Liberar memoria
+        $resultado->free();
+
+        //Retornar resultados
+        return $array;
     }
+
+    public static function crearObjeto($registro) {
+        $objeto = new self;
+        
+        foreach($registro as $key => $value) {
+            if(property_exists( $objeto, $key )) {
+                $objeto->$key = $value;
+            }
+        }
+
+        return $objeto;
+    }
+
+    //Sincroniza el objeto en memoria con los cambios realizados por el usuario
+    public function sincronizar($args = []) {
+        foreach($args as $key => $value) {
+            if(property_exists($this, $key ) && !is_null($value)) {
+                $this->$key = $value;
+            }
+        }
+    }
+
 }

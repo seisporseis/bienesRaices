@@ -23,3 +23,9 @@ function debuguear($variable) {
     exit;
 }
 
+//escapar/ sanitizar el html
+function sane($html) : string {
+
+    $sane = htmlspecialchars($html, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    return $sane;
+}
