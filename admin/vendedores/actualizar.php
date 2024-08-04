@@ -21,15 +21,15 @@
     // Ejecutar el código después de que el usuario envia el formulario
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        // Asignar los atributos
+        //Asignar los valores
         $args = $_POST['vendedor'];
 
+        //Sincronizar objeto en memoria con lo que el usuario escribió
         $vendedor->sincronizar($args);
 
         // Validación
         $errores = $vendedor->validar();
        
-
         if(empty($errores)) {
             $vendedor->guardar();
         }
