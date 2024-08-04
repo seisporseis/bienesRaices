@@ -5,8 +5,8 @@ namespace App;
 class ActiveRecord {
     //base de datos
     protected static $db;
-    protected static $columnasDB = [];
     protected static $tabla = '';
+    protected static $columnasDB = [];
 
     //Errores
     protected static $errores = [];
@@ -65,14 +65,13 @@ class ActiveRecord {
         $query .= " ) VALUES (' ";  
         $query .= join("', '", array_values($atributos));
         $query .= " ') ";
-        // debuguear($query);
 
         $resultado = self::$db->query($query);
 
         //mensaje de exito o error
         if($resultado) {
-        //redireccionar usuario: para no meter datos duplicados
-        header('Location: /admin?resultado=1');
+            //redireccionar usuario: para no meter datos duplicados
+            header('Location: /admin?resultado=1');
         }
     }
 
